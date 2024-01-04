@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
@@ -82,3 +83,10 @@ class FileConverter(CreateAPIView):
             with open('result.txt', 'w', encoding='utf-8') as f:
                 f.write(result)
             return Response({'result': 'done check your desktop'})
+
+
+def migration(request):
+    import os
+    os.system('python3 manage.py makemigrations')
+    os.system('python3 manage.py migrate --no-input')
+    return HttpResponse('Migration Done')
