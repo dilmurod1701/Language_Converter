@@ -23,3 +23,31 @@ cyrillic_letter = {
             'k': 'к', 'l': 'л', 'm': 'м', 'n': 'н', 'o': 'о', 'p': 'п', 'q': 'к', 'r': 'р', 's': 'с', 't': 'т',
             'u': 'у', 'v': 'в', 'w': 'ш', 'x': 'х', 'y': 'й', 'z': 'з', 'sh': 'ш', 'ch': 'ч'
         }
+
+
+class ConvertText(APIView):
+    def post(self, request):
+        context = request.data.get('context')
+        pattern = request.data.get('pattern')
+
+        result = self.convert(context, pattern)
+        return Response({'result': result})
+
+    def convert(self, context, pattern):
+        if pattern == 'cyrillic':
+            result = ''
+            for letter in context:
+                if letter in cyrillic_letter:
+                    result += cyrillic_letter[letter]
+                else:
+                    result += letter
+        elif pattern == 'latin':
+            result = ''
+            for letter in context:
+                if letter in latin_letter:
+                    result += latin_letter[letter]
+                else:
+                    result += letter
+        else:
+            result = "error: must be context and pattern(latin or cyrillic)"
+        return result
