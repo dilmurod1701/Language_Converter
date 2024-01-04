@@ -9,6 +9,7 @@ django = "==4.2"
 psycopg2-binary = "*"
 whitenoise = "*"
 selenium = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
