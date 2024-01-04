@@ -51,3 +51,34 @@ class ConvertText(APIView):
         else:
             result = "error: must be context and pattern(latin or cyrillic)"
         return result
+
+
+class FileConverter(CreateAPIView):
+    queryset = File
+    serializer_class = FileSerializer
+
+    def post(self, request):
+        filename = request.FILES['file']
+        pattern = request.data['pattern']
+
+        if filename.name.endswith('.txt'):
+            content = filename.read().decode('utf-8')
+            if pattern == 'cyrillic':
+                result = ''
+                for each in content:
+                    if each in cyrillic_letter:
+                        result += cyrillic_letter[each]
+                    else:
+                        result += each
+            elif pattern == 'latin':
+                result = ''
+                for each in content:
+                    if each in latin_letter:
+                        result += latin_letter[each]
+                    else:
+                        result += each
+            else:
+                return Response({'error: must be context and pattern(latin or cyrillic)'})
+            with open('result.txt', 'w', encoding='utf-8') as f:
+                f.write(result)
+            return Response({'result': 'done check your desktop'})
